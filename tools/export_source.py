@@ -7,8 +7,9 @@ import re
 import zipfile
 from toolchain import ROOT, DIST, version
 
-TOP_FILES = ['.gitattributes', '.gitignore', 'README.md', 'LICENSE',
-             'CHANGELOG.md', 'THIRD_PARTY_NOTICES.md']
+TOP_FILES = ['.gitattributes', '.gitignore', 'README.md', 'README.en.md', 'LICENSE',
+             'CHANGELOG.md', 'CHANGELOG.en.md',
+             'THIRD_PARTY_NOTICES.md', 'THIRD_PARTY_NOTICES.en.md']
 SOURCE_DIRS = ['src', 'tools', 'tests', 'docs', 'licenses']
 TEXT_SUFFIXES = {'.py', '.java', '.md', '.xml', '.sh', '.prop', '.json', '.txt'}
 ALLOWED_SUFFIXES = TEXT_SUFFIXES | {'.png', ''}

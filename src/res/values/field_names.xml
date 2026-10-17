@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Display captions only. Canonical JSON paths live in field-label-resources.json. -->
+<resources>
+    <string formatted="false" name="field_header">Configuration header</string>
+    <string formatted="false" name="field_header_version">Configuration version</string>
+    <string formatted="false" name="field_header_network_improve">Network acceleration</string>
+    <string formatted="false" name="field_header_index_enable">Index reporting</string>
+    <string formatted="false" name="field_header_mqs_enable">MQS quality service</string>
+    <string formatted="false" name="field_header_mqs_expand_enable">MQS extensions</string>
+    <string formatted="false" name="field_game_booster">Game booster</string>
+    <string formatted="false" name="field_game_booster_booster_enable">Game booster enabled</string>
+    <string formatted="false" name="field_game_booster_cpuset_enable">CPU affinity enabled</string>
+    <string formatted="false" name="field_game_booster_tuner_enable">Tuner enabled</string>
+    <string formatted="false" name="field_game_booster_qsync_enable">QSync enabled</string>
+    <string formatted="false" name="field_game_booster_action_key_optimized">Key optimization</string>
+    <string formatted="false" name="field_game_booster_fisr_mqs_v2">FISR monitoring v2</string>
+    <string formatted="false" name="field_game_booster_key_mivk_gputuner_select_enable">GPU mode selection</string>
+    <string formatted="false" name="field_game_booster_support_display_refresh_rates">Supported refresh rates</string>
+    <string formatted="false" name="field_game_booster_low_display_refresh_rate_scenes">Low refresh rate scenarios</string>
+    <string formatted="false" name="field_game_booster_support_dynamic_refresh_rate_games">Dynamic refresh rate games</string>
+    <string formatted="false" name="field_game_booster_game_group_mapping_enable">Group mapping enabled</string>
+    <string formatted="false" name="field_game_booster_game_group_mapping_config">Game group mappings</string>
+    <string formatted="false" name="field_game_booster_recommend_tgame_thresh">TGAME recommendation threshold</string>
+    <string formatted="false" name="field_game_booster_multi_windows_group_mapping_config">Multi-window groups</string>
+    <string formatted="false" name="field_game_booster_novatek_extend_config_novatek_gex_fps_limit">Display driver FPS limit</string>
+    <string formatted="false" name="field_game_booster_dynamic_fps_global">Global temperature FPS table</string>
+    <string formatted="false" name="field_game_booster_novatek_game_params">Display driver parameters</string>
+    <string formatted="false" name="field_game_booster_novatek_black_app">Novatek blocklist</string>
+    <string formatted="false" name="field_game_booster_novatek_extend_config">Novatek extended configuration</string>
+    <string formatted="false" name="field_game_booster_novatek_extend_config_novatek_cmd_control_enable">Driver command control</string>
+    <string formatted="false" name="field_game_booster_novatek_extend_config_novatek_cmd_control_interval">Command interval (ms)</string>
+    <string formatted="false" name="field_game_booster_novatek_extend_config_novatek_bypass_delay">Bypass delay (ms)</string>
+    <string formatted="false" name="field_game_booster_novatek_extend_config_novatek_non_playing_config">Non-playing configuration</string>
+    <string formatted="false" name="field_game_booster_novatek_extend_config_novatek_perf_policy_config">Performance policy registers</string>
+    <string formatted="false" name="field_game_booster_self_gpu_tuner_enable">GPU Tuner enabled</string>
+    <string formatted="false" name="field_game_booster_self_gpu_tuner_config">GPU tuning configuration</string>
+    <string formatted="false" name="field_game_booster_soc_enable">SOC optimization enabled</string>
+    <string formatted="false" name="field_game_booster_soc_gamelist">SOC optimization games</string>
+    <string formatted="false" name="field_game_booster_migt">migt kernel parameters</string>
+    <string formatted="false" name="field_game_booster_game_scenario_control_config">Scenario control</string>
+    <string formatted="false" name="field_game_booster_scene_id_reuse">Reuse scenario IDs</string>
+    <string formatted="false" name="field_game_booster_scene_id_sender_enable">Scenario reporting</string>
+    <string formatted="false" name="field_game_booster_gamesight">GameSight</string>
+    <string formatted="false" name="field_game_booster_clusterlist">CPU cluster configuration</string>
+    <string formatted="false" name="field_game_booster_support_highfps_app">High-FPS game list</string>
+    <string formatted="false" name="field_game_booster_qfps_enable">QFPS enabled</string>
+    <string formatted="false" name="field_game_booster_qfps_list">QFPS games</string>
+    <string formatted="false" name="field_game_booster_scale_app_enable">Resolution adjustment enabled</string>
+    <string formatted="false" name="field_game_booster_support_scale_app_list">Resolution scaling table</string>
+    <string formatted="false" name="field_game_booster_force_scale_app_list">Forced scaling list</string>
+    <string formatted="false" name="field_game_booster_support_vrs_app">VRS games</string>
+    <string formatted="false" name="field_game_booster_support_resolution_enhance_config">Resolution enhancement</string>
+    <string formatted="false" name="field_game_booster_vrs_soc">VRS SOC models</string>
+    <string formatted="false" name="field_game_booster_background_freeze_enable">Background freezing enabled</string>
+    <string formatted="false" name="field_game_booster_background_freeze_whitelist">Freeze allowlist</string>
+    <string formatted="false" name="field_game_booster_migl_settings">MIGL rendering optimization</string>
+    <string formatted="false" name="field_game_booster_mivk_settings">MIVK rendering optimization</string>
+    <string formatted="false" name="field_game_booster_mift_settings">MIFT configuration</string>
+    <string formatted="false" name="field_game_booster_fisr_config">FISR frame interpolation / super resolution</string>
+    <string formatted="false" name="field_game_booster_support_ysre">YSRE rendering enhancement</string>
+    <string formatted="false" name="field_game_booster_affinity_enable">Thread affinity optimization</string>
+    <string formatted="false" name="field_game_booster_monitor">Monitoring configuration</string>
+    <string formatted="false" name="field_game_booster_mqs_enhance_list">Priority monitoring games</string>
+    <string formatted="false" name="field_game_booster_mqs_extend_config">MQS extended configuration</string>
+    <string formatted="false" name="field_game_booster_booster_debug_log_collect_config">Debug log collection</string>
+    <string formatted="false" name="field_game_booster_winplay_mqs_enable">Winplay MQS</string>
+    <string formatted="false" name="field_game_booster_enhance_switch_action">Enhancement switch actions</string>
+    <string formatted="false" name="field_game_booster_support_motor_app">Haptic feedback games</string>
+    <string formatted="false" name="field_game_booster_predownload_enable">Predownload enabled</string>
+    <string formatted="false" name="field_game_booster_support_predownload_app_list">Predownload games</string>
+    <string formatted="false" name="field_game_booster_global_config">Global commands</string>
+    <string formatted="false" name="field_game_booster_booster_config">Scenario-level boosting</string>
+    <string formatted="false" name="field_common_config">Common configuration</string>
+    <string formatted="false" name="field_common_config_game_list">Game recognition list</string>
+    <string formatted="false" name="field_game_booster_monitor_monitor_enable">Monitoring enabled</string>
+    <string formatted="false" name="field_game_booster_monitor_analytics_enable">Analytics reporting</string>
+    <string formatted="false" name="field_game_booster_monitor_default_interval">Monitoring interval (seconds)</string>
+    <string formatted="false" name="field_game_booster_mqs_extend_config_repeat_start_scene_pkg">Repeated-start monitoring packages</string>
+    <string formatted="false" name="field_game_booster_mqs_extend_config_reset_game_min_duration">Game duration reset</string>
+    <string formatted="false" name="field_game_booster_mqs_extend_config_slice_app_config">Sliced monitoring apps</string>
+    <string formatted="false" name="field_game_booster_mqs_extend_config_expand_power">Extended power collection</string>
+    <string formatted="false" name="field_game_booster_fisr_config_enhance_config">Frame interpolation enhancement</string>
+    <string formatted="false" name="field_game_booster_game_scenario_control_config_package_list">Scenario control games</string>
+    <string formatted="false" name="field_game_booster_game_scenario_control_config_game_stop_notify">Game stopped notification</string>
+    <string formatted="false" name="field_game_booster_self_gpu_tuner_config_com_mihoyo_hkrpg">GPU tuning (Honkai: Star Rail)</string>
+    <string formatted="false" name="field_game_booster_self_gpu_tuner_config_com_mihoyo_yuanshen">GPU tuning (Genshin Impact)</string>
+    <string formatted="false" name="field_game_booster_self_gpu_tuner_config_com_tencent_tmgp_sgame">GPU tuning (Honor of Kings)</string>
+    <string formatted="false" name="field_game_booster_self_gpu_tuner_config_com_kurogame_mingchao">GPU tuning (Wuthering Waves)</string>
+    <string formatted="false" name="field_game_booster_global_config_start">Global game entry commands</string>
+    <string formatted="false" name="field_game_booster_global_config_end">Game exit restore commands</string>
+    <string formatted="false" name="field_game_booster_booster_debug_log_collect_config_l3_jank_debug_log_enable">L3 jank logging enabled</string>
+    <string formatted="false" name="field_game_booster_booster_debug_log_collect_config_l3_threshold_jank_percent">Jank trigger threshold (%)</string>
+    <string formatted="false" name="field_game_booster_booster_debug_log_collect_config_trace_rest_time_by_second">Trace interval (seconds)</string>
+    <string formatted="false" name="field_game_booster_booster_debug_log_collect_config_max_trace_file_num_per_game">Maximum logs per game</string>
+    <string formatted="false" name="field_game_booster_booster_debug_log_collect_config_trace_events">Trace event types</string>
+    <string formatted="false" name="field_game_booster_migl_settings_enable">MIGL rendering library enabled</string>
+    <string formatted="false" name="field_game_booster_migl_settings_game_params">MIGL game parameters</string>
+    <string formatted="false" name="field_game_booster_mivk_settings_enable">MIVK rendering library enabled</string>
+    <string formatted="false" name="field_game_booster_mivk_settings_app_params">MIVK app parameters</string>
+    <string formatted="false" name="field_game_booster_dynamic_fps_global_dynamic_fps">TGAME temperature FPS table</string>
+    <string formatted="false" name="field_game_booster_dynamic_fps_global_dynamic_fps_m">MGAME temperature FPS table</string>
+    <string formatted="false" name="field_game_booster_mift_settings_mift_enable">MIFT enabled</string>
+    <string formatted="false" name="field_game_booster_mift_settings_support_app">MIFT supported apps</string>
+    <string formatted="false" name="field_game_booster_booster_config_default_config">Default scenario commands</string>
+    <string formatted="false" name="field_game_booster_booster_config_scene_config">Scenario configuration table</string>
+    <string formatted="false" name="field_game_booster_booster_config_ovrride_config">Scenario overrides</string>
+    <string formatted="false" name="field_mgame_fps">MGAME FPS</string>
+    <string formatted="false" name="field_tgame_fps">TGAME FPS</string>
+</resources>

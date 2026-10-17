@@ -30,6 +30,7 @@ public final class HookEntry implements IXposedHookLoadPackage {
     private long applied=-1,fetched=-1;
     private long blockedCount;
     private String lastBlocked="",lastError="";
+    private Messages.Text lastErrorCaption;
     private boolean adapterReady;
     private Object[] lastSystemRule;
     private final Uri stateUri=Uri.parse("content://"+Protocol.AUTH+"/state");
@@ -54,13 +55,13 @@ public final class HookEntry implements IXposedHookLoadPackage {
                     worker.execute(()->onState());
                     new Handler(Looper.getMainLooper()).postDelayed(()->worker.execute(()->onState()),3000);
                     reportHook();
-                }catch(Throwable e){lastError=Protocol.message(e);reportHook();}
+                }catch(Throwable e){lastError=Protocol.message(e);lastErrorCaption=Messages.reason(e);reportHook();}
             }
         });
     }
     private void refreshState(){
-        try{state=new JSONObject(Protocol.read(context.getContentResolver().openInputStream(stateUri)));if(lastError.startsWith("状态读取失败："))lastError="";}
-        catch(Throwable e){lastError="状态读取失败："+Protocol.message(e);}
+        try{state=new JSONObject(Protocol.read(context.getContentResolver().openInputStream(stateUri)));if(lastError.startsWith("状态读取失败：")){lastError="";lastErrorCaption=null;}}
+        catch(Throwable e){lastError="状态读取失败："+Protocol.message(e);lastErrorCaption=Messages.text("diag_state_read_failed",lastError,Messages.reason(e));}
     }
     private void onState(){
         refreshState();
@@ -93,8 +94,8 @@ public final class HookEntry implements IXposedHookLoadPackage {
             @Override protected void afterHookedMethod(MethodHookParam p){
                 Object prior=p.getObjectExtra("previousLocal");if(prior!=null)localApply.set((Boolean)prior);
                 if(p.getObjectExtra("config")!=null&&!Boolean.TRUE.equals(p.getResult()))XposedHelpers.callMethod(p.getObjectExtra("config"),"B5",p.getObjectExtra("previousVersion"));
-                if(Boolean.TRUE.equals(p.getResult())&&state.optBoolean("enabled")&&state.optBoolean("locked")){applied=state.optLong("applyNonce");lastError="";reportHook();}
-                if(p.hasThrowable()){lastError=Protocol.message(p.getThrowable());reportHook();}
+                if(Boolean.TRUE.equals(p.getResult())&&state.optBoolean("enabled")&&state.optBoolean("locked")){applied=state.optLong("applyNonce");lastError="";lastErrorCaption=null;reportHook();}
+                if(p.hasThrowable()){lastError=Protocol.message(p.getThrowable());lastErrorCaption=Messages.reason(p.getThrowable());reportHook();}
             }
         });
         // All registered cloud libraries also pass through this notification point.
@@ -115,23 +116,23 @@ public final class HookEntry implements IXposedHookLoadPackage {
     }
     private void apply(){
         try{
-            if(!adapterReady)throw new Exception("当前Joyose版本的解析入口未匹配");
+            if(!adapterReady)throw Messages.failure("diag_joyose_parser_unmatched","当前Joyose版本的解析入口未匹配");
             if(parser==null)parser=XposedHelpers.callStaticMethod(XposedHelpers.findClass("f0.c0",loader),"P",context);
             JSONObject rules=state.getJSONObject("profiles"),p=rules.optJSONObject("booster_config");
-            if(p==null)throw new Exception("缺少booster_config");Protocol.validateProfile("booster_config",p);
+            if(p==null)throw Messages.failure("diag_booster_config_missing","缺少booster_config");Protocol.validateProfile("booster_config",p);
             Object result=invokeLocal(new Object[]{params(p).toString(),"booster_config",p.getLong("version"),false,-1});
-            if(!Boolean.TRUE.equals(result))throw new Exception("Joyose返回规则加载失败；保留备份以便回滚");
-            applied=state.getLong("applyNonce");lastError="";
+            if(!Boolean.TRUE.equals(result))throw Messages.failure("diag_joyose_rule_load_failed","Joyose返回规则加载失败；保留备份以便回滚");
+            applied=state.getLong("applyNonce");lastError="";lastErrorCaption=null;
             Object manager=XposedHelpers.callStaticMethod(XposedHelpers.findClass("f.f",loader),"k",context);
             for(Iterator<String> it=rules.keys();it.hasNext();){String key=it.next();if(!key.equals("booster_config")){JSONObject other=rules.getJSONObject(key);XposedHelpers.callMethod(manager,"q",key,other.getLong("version"),params(other).toString());}}
-        }catch(Throwable e){lastError=Protocol.message(e);}reportHook();
+        }catch(Throwable e){lastError=Protocol.message(e);lastErrorCaption=Messages.reason(e);}reportHook();
     }
     private void restoreSystemRule(){
         try{
-            if(lastSystemRule==null||parser==null)throw new Exception("尚未取得系统候选规则，请重启Joyose恢复系统配置");
+            if(lastSystemRule==null||parser==null)throw Messages.failure("diag_system_rule_unavailable","尚未取得系统候选规则，请重启Joyose恢复系统配置");
             Object result=invokeLocal(lastSystemRule.clone());
-            if(!Boolean.TRUE.equals(result))throw new Exception("系统候选规则恢复失败，请重启Joyose");applied=-1;lastError="";
-        }catch(Throwable e){lastError=Protocol.message(e);}
+            if(!Boolean.TRUE.equals(result))throw Messages.failure("diag_system_rule_restore_failed","系统候选规则恢复失败，请重启Joyose");applied=-1;lastError="";lastErrorCaption=null;
+        }catch(Throwable e){lastError=Protocol.message(e);lastErrorCaption=Messages.reason(e);}
     }
     private Object invokeLocal(Object[] arguments)throws Throwable{
         Object config=XposedHelpers.callStaticMethod(XposedHelpers.findClass("f0.g0",loader),"G2",context);
@@ -154,12 +155,12 @@ public final class HookEntry implements IXposedHookLoadPackage {
                 String url=(String)XposedHelpers.callStaticMethod(client,"b");
                 Object parameters=XposedHelpers.callStaticMethod(client,"a",0L);
                 String raw=(String)XposedHelpers.callStaticMethod(XposedHelpers.findClass("com.xiaomi.teg.config.c.c",loader),"b",url,parameters);
-                if(raw==null)throw new IOException("TEG服务器未返回响应");
-                JSONObject response=new JSONObject(raw);if(response.optInt("code")!=200)throw new IOException("TEG服务器返回code="+response.opt("code"));
+                if(raw==null)throw Messages.failureAs("IOException","diag_teg_no_response","TEG服务器未返回响应");
+                JSONObject response=new JSONObject(raw);if(response.optInt("code")!=200)throw Messages.failureAs("IOException","diag_teg_response_code","TEG服务器返回code="+response.opt("code"),String.valueOf(response.opt("code")));
                 JSONObject data=response.getJSONObject("data");JSONArray rules=data.optJSONArray("rules");
                 if(rules!=null)for(int i=0;i<rules.length();i++){JSONObject rule=rules.getJSONObject(i);if(rule.optInt("status")==1&&rule.has("content"))addDownloaded(downloaded,rule.optString("moduleKey"),new JSONObject(rule.getString("content")));}
                 result.put("success",true).put("count",downloaded.length()).put("serverVersion",data.optLong("maxVersion"))
-                    .put("message","TEG服务器已响应，取得"+downloaded.length()+"份规则，原数据库未改写");
+                    .put("message","TEG服务器已响应，取得"+downloaded.length()+"份规则，原数据库未改写").put("messageCaption",Protocol.caption(Messages.text("diag_teg_fetch_complete","TEG服务器已响应，取得"+downloaded.length()+"份规则，原数据库未改写",downloaded.length())));
             }else{
                 settingsRequestOk=false;
                 Class<?> conn=XposedHelpers.findClass("com.android.settings.cloud.network.Connection",loader),util=XposedHelpers.findClass("com.android.settings.cloud.CloudNetworkUtils",loader);
@@ -169,18 +170,18 @@ public final class HookEntry implements IXposedHookLoadPackage {
                 Object base=XposedHelpers.callStaticMethod(util,"getBaseParameterForConn",request,context);
                 Map<String,String> parameters=(Map<String,String>)XposedHelpers.callStaticMethod(util,"getRequestParams",context);
                 parameters.put("dataVersion","0");XposedHelpers.callStaticMethod(util,"addRequestParameter",base,parameters);
-                Object status=XposedHelpers.callMethod(request,"requestJSON");if(!String.valueOf(status).equals("OK"))throw new IOException("系统云控网络结果："+status+(networkError.get()==null?"":" / "+networkError.get()));
+                Object status=XposedHelpers.callMethod(request,"requestJSON");if(!String.valueOf(status).equals("OK"))throw Messages.failureAs("IOException","diag_settings_network_result","系统云控网络结果："+status+(networkError.get()==null?"":" / "+networkError.get()),String.valueOf(status)+(networkError.get()==null?"":" / "+networkError.get()));
                 JSONObject response=(JSONObject)XposedHelpers.callMethod(request,"getResponse");
-                if(response==null||response.has("code"))throw new IOException("系统云控错误："+(response==null?"无响应":response.opt("code")));
+                if(response==null||response.has("code"))throw Messages.failureAs("IOException","diag_settings_server_error","系统云控错误："+(response==null?"无响应":response.opt("code")),response==null?Messages.text("diag_server_no_response","无响应"):String.valueOf(response.opt("code")));
                 JSONArray rules=response.getJSONArray("data");
                 for(int i=0;i<rules.length();i++){JSONObject rule=rules.getJSONObject(i);if(rule.optString("packageName").equals("com.xiaomi.joyose")&&rule.optInt("status")==1)addDownloaded(downloaded,rule.getString("moduleName"),new JSONObject(rule.getString("productData")));}
                 result.put("success",true).put("count",downloaded.length()).put("serverVersion",response.optLong("maxVersion"))
-                    .put("message","系统云控服务器已响应，取得"+downloaded.length()+"份Joyose规则，原数据库未改写");
+                    .put("message","系统云控服务器已响应，取得"+downloaded.length()+"份Joyose规则，原数据库未改写").put("messageCaption",Protocol.caption(Messages.text("diag_settings_fetch_complete","系统云控服务器已响应，取得"+downloaded.length()+"份Joyose规则，原数据库未改写",downloaded.length())));
             }
             JSONObject file=new JSONObject().put("nonce",nonce).put("time",System.currentTimeMillis()).put("rules",downloaded);
-            byte[] bytes=file.toString().getBytes(java.nio.charset.StandardCharsets.UTF_8);if(bytes.length>Protocol.MAX_BYTES)throw new IOException("下载规则超过4 MiB");
+            byte[] bytes=file.toString().getBytes(java.nio.charset.StandardCharsets.UTF_8);if(bytes.length>Protocol.MAX_BYTES)throw Messages.failureAs("IOException","diag_download_rules_too_large","下载规则超过4 MiB");
             try(OutputStream out=context.getContentResolver().openOutputStream(Uri.parse("content://"+Protocol.AUTH+"/stage/"+(joyose?"joyose":"settings")+"/"+nonce),"w")){out.write(bytes);}
-        }catch(Throwable e){try{result.put("success",false).put("message",Protocol.message(e));}catch(Exception ignored){}}
+        }catch(Throwable e){try{result.put("success",false).put("message",Protocol.message(e)).put("messageCaption",Protocol.messageCaption(e));}catch(Exception ignored){}}
         finally{manualFetch.set(false);networkError.remove();}
         sendReport(result);
     }
@@ -215,12 +216,12 @@ public final class HookEntry implements IXposedHookLoadPackage {
                 XposedHelpers.findAndHookMethod(conn,"requestJSON",new XC_MethodHook(){@Override protected void afterHookedMethod(MethodHookParam p){if(state.optLong("fetchUntil")>System.currentTimeMillis()&&String.valueOf(p.getResult()).equals("OK"))settingsRequestOk=true;}});
                 XposedBridge.hookAllMethods(XposedHelpers.findClass("com.android.settings.cloud.released.DownloadUtil",loader),"accessInternetByPost",requestGuard);
             }
-        }catch(Throwable e){lastError="云控专用网络入口："+Protocol.message(e);}
+        }catch(Throwable e){lastError="云控专用网络入口："+Protocol.message(e);lastErrorCaption=Messages.text("diag_cloud_network_entry",lastError,Messages.reason(e));}
         try{
             XposedHelpers.findAndHookMethod("com.xiaomi.push.ch",loader,"a",ArrayList.class,String.class,String.class,boolean.class,new XC_MethodHook(){
                 @Override protected void beforeHookedMethod(MethodHookParam p){if(shouldBlock()&&state.optBoolean("discoveryBlock",true)){blockedCount++;lastBlocked="resolver.msg.xiaomi.net / GSLB";p.setThrowable(new IOException("JoyoseLeash: address discovery redirected to loopback policy"));}}
             });
-        }catch(Throwable e){if(!joyose)lastError="地址发现入口："+Protocol.message(e);}
+        }catch(Throwable e){if(!joyose){lastError="地址发现入口："+Protocol.message(e);lastErrorCaption=Messages.text("diag_discovery_entry",lastError,Messages.reason(e));}}
         // Domain interception covers cached endpoint builders and address-discovery requests.
         XposedHelpers.findAndHookMethod(URL.class,"openConnection",new XC_MethodHook(){
             @Override protected void beforeHookedMethod(MethodHookParam p)throws Throwable{
@@ -263,8 +264,8 @@ public final class HookEntry implements IXposedHookLoadPackage {
     private String loopback(String value)throws Exception{URL u=new URL(value);return new URL(u.getProtocol(),"127.0.0.1",u.getPort(),u.getFile()).toString();}
     private void reportHook(){
         try{JSONObject r=new JSONObject().put("kind","hook").put("process",process).put("ready",adapterReady).put("pid",android.os.Process.myPid())
-            .put("appliedNonce",applied).put("blockedRequests",blockedCount).put("lastBlockedHost",lastBlocked).put("error",lastError)
-            .put("engine","Zygisk Next / LSPosed").put("adapter",joyose?"Joyose-2.5.21":"HTMLViewer-remote").put("build","0.3.0");
+            .put("appliedNonce",applied).put("blockedRequests",blockedCount).put("lastBlockedHost",lastBlocked).put("error",lastError).put("errorCaption",Protocol.caption(lastErrorCaption))
+            .put("engine","Zygisk Next / LSPosed").put("adapter",joyose?"Joyose-2.5.21":"HTMLViewer-remote").put("build","0.3.3 Beta");
             if(joyose&&adapterReady)try{Object config=XposedHelpers.callStaticMethod(XposedHelpers.findClass("f0.g0",loader),"G2",context);
                 r.put("activeVersion",XposedHelpers.callMethod(config,"l1"))
                  .put("subwayMGAME",String.valueOf(XposedHelpers.callMethod(config,"Q1","com.kiloo.subwaysurf.gw")))

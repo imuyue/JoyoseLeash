@@ -39,7 +39,7 @@ def main():
         jar = BUILD / (name + '-classes.jar')
         with zipfile.ZipFile(jar, 'w', zipfile.ZIP_DEFLATED) as archive:
             for path in sorted((BUILD / 'classes').rglob('*.class')):
-                is_backend = path.name.startswith(('Backend', 'Protocol'))
+                is_backend = path.name.startswith(('Backend', 'Protocol', 'Messages'))
                 if (backend and is_backend) or (not backend and not path.name.startswith('Backend')):
                     archive.write(path, path.relative_to(BUILD / 'classes').as_posix())
         run([tools.android_tool('d8'), '--min-api', '26', '--lib', tools.android_jar,

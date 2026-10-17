@@ -1,10 +1,10 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.muyue.joyoseleash" android:versionCode="6" android:versionName="0.3.0">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.muyue.joyoseleash" android:versionCode="9" android:versionName="0.3.3">
   <uses-sdk android:minSdkVersion="26" android:targetSdkVersion="35" />
   <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
   <queries><package android:name="com.android.htmlviewer" /></queries>
-  <application android:label="@string/app_name" android:theme="@style/AppTheme" android:allowBackup="false" android:usesCleartextTraffic="false">
+  <application android:label="@string/app_name" android:theme="@style/AppTheme" android:localeConfig="@xml/locales_config" android:allowBackup="false" android:usesCleartextTraffic="false">
     <meta-data android:name="xposedmodule" android:value="true" />
-    <meta-data android:name="xposeddescription" android:value="Joyose云控规则编辑、版本锁定及云端请求拦截。通过现有Zygisk/LSPosed运行。" />
+    <meta-data android:name="xposeddescription" android:resource="@string/module_description" />
     <meta-data android:name="xposedminversion" android:value="82" />
     <meta-data android:name="xposedscope" android:resource="@array/xposed_scope" />
     <activity android:name=".ManagerActivity" android:exported="true" android:configChanges="orientation|screenSize|keyboardHidden" android:windowSoftInputMode="adjustResize"><intent-filter><action android:name="android.intent.action.MAIN"/><category android:name="android.intent.category.LAUNCHER"/></intent-filter></activity>

@@ -1,6 +1,6 @@
 id=cloudruleguard
 name=JoyoseLeash · 云控拴绳
-version=0.3.0 Beta
-versionCode=6
+version=0.3.3 Beta
+versionCode=9
 author=沐月、ChatGPT
 description=小米云控回环屏蔽、原生规则管理、版本与规则锁定。配套钩子使用Zygisk Next / LSPosed。

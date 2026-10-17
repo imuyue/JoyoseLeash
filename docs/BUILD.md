@@ -1,5 +1,9 @@
 # 构建
 
+简体中文 | [English](BUILD.en.md)
+
+发布版本为 **0.3.3 Beta**，versionCode 为 **9**。
+
 需要 Python 3.10+、JDK、Android SDK Platform / Build Tools，以及 Xposed API 82 编译依赖。不需要 Gradle。已在 Windows、Python 3.12、JDK 21、Android API 35 编译平台上验证；其他主机环境尚未实测。
 
 ## 依赖
@@ -57,8 +61,8 @@ python tools/build.py
 输出目录 `dist/`：
 
 ```text
-JoyoseLeash-0.3.0.apk
-JoyoseLeash-KSU-0.3.0.zip
+JoyoseLeash-0.3.3.apk
+JoyoseLeash-KSU-0.3.3.zip
 backend.jar
 SHA256.json
 ```
@@ -83,6 +87,17 @@ python tools/export_source.py
 
 `--release` 缺少签名配置时会停止，不会自动生成替代密钥。密码通过子进程环境传递，不写入源码或命令行参数。
 
+## 回归检查
+
+```sh
+python tools/check_rules.py
+python tools/check_installer.py
+python tools/test_cloud_catalog.py
+python tools/build_native_tests.py
+```
+
+云控夹具检查需要 ADB 设备，仅使用内存 SQLite / XML / JSON。界面测试的安装、设备条件与数据恢复见 [开发文档](DEVELOPMENT.md)。
+
 ## 导出源码
 
 ```sh
@@ -90,4 +105,4 @@ python tools/export_source.py --check
 python tools/export_source.py
 ```
 
-导出器只收集项目源码、脚本和文档，输出 `dist/JoyoseLeash-0.3.0-source.zip` 并更新 `SHA256.json`。发布二进制时，一并提供对应版本源码。`dist/` 用于 Releases，不提交到源码仓库。
+导出器只收集项目源码、脚本和文档，输出 `dist/JoyoseLeash-0.3.3-source.zip` 并更新 `SHA256.json`。发布二进制时，一并提供对应版本源码。`dist/` 用于 Releases，不提交到源码仓库。

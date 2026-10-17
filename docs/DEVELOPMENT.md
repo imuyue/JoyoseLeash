@@ -1,5 +1,7 @@
 # 开发与验证
 
+简体中文 | [English](DEVELOPMENT.en.md)
+
 ## 目录
 
 | 路径 | 内容 |
@@ -11,18 +13,18 @@
 | `tests/java/`、`tests/shell/` | 字符串解析与安装迁移的本机检查 |
 | `licenses/` | 保留的第三方许可证全文 |
 | `tools/` | 构建、源码导出和设备开发工具 |
-| `docs/` | 构建、适配、设计与验证摘要 |
+| `docs/` | 构建、适配与验证文档 |
 | `build/`、`dist/` | 忽略提交的构建输出 |
 | `.local/` | 忽略提交的依赖、签名、设备数据与调试记录 |
 
 ## 模块职责
 
-- `ManagerActivity`、`NativeUi`、`FpsEditor`：原生页面与本地编辑草稿。
+- `ManagerActivity`、`NativeUi`、`FpsEditor`、`JsonValueEditor`：原生页面与本地编辑草稿。
 - `RuleModel`：字段类型、帧率规则、温度档校验。
 - `StringRules`、`StringRuleEditor`：已识别字符串的分项解析、原生编辑及只替换改动片段的序列化。
 - `RuleFields`：JoyCtl 字段名称与路径匹配适配，按当前 Joyose 适配器保留 MGAME / TGAME 含义。
 - `RootClient`、`StateProvider`、`Protocol`：管理界面、Root 后端和钩子之间的通信。
-- `Backend`：规则读取、提交、历史备份和网络配置。
+- `Backend`：规则读取、提交、历史备份、网络配置和系统云控只读清单。
 - `HookEntry`：Joyose / HTML 查看器适配、规则应用、请求拦截和手动拉取。
 - `net.sh`：hosts 映射和内核回环规则；`service.sh`、`observe.sh`、`lease.sh`：启动、文件通知及临时放行恢复。
 
@@ -45,6 +47,8 @@ python tools/check_installer.py
 
 前者检查 PID 的 6/7 字段、MIGT、应用参数、未知片段保留与非法值拦截；后者使用模拟包管理器检查 APK 自动安装 / 更新、安装失败和幂等数据迁移，不连接手机。Windows 下安装器检查需要 Git for Windows Bash。
 
+翻译资源另运行 `python tools/check_i18n.py`；标准目录、参数与新增语言方法见[应用翻译](LOCALIZATION.md)。
+
 ## 界面检查
 
 ```sh
@@ -54,7 +58,9 @@ adb shell am instrument -w com.muyue.joyoseleash.qa/com.muyue.joyoseleash.qa.Nat
 adb uninstall com.muyue.joyoseleash.qa
 ```
 
-检查 APK 必须与已安装的主应用使用同一个签名。运行时会占用手机界面，读取现有规则和历史记录，临时编辑内存草稿并在结束时恢复；不会应用测试中的帧率修改。测试针对开发用且已配置规则的设备，假定安装了地铁跑酷并存在历史备份。报告在主应用私有目录 `files/native-qa/report.json`。只卸载 `.qa` 测试应用。
+检查 APK 必须与主应用使用相同签名。运行时占用手机界面，结束后恢复普通草稿与系统云控草稿的原始字节及存在状态，不应用测试规则。设备检查假定已安装地铁跑酷、存在历史备份及五条通用云控备份记录；其他设备需调整验收数据。报告位于主应用私有目录 `files/native-qa/report.json`，只卸载 `.qa` 测试应用。
+
+`python tools/test_cloud_catalog.py` 使用 Android 内存夹具检查清单、指纹、类型和格式边界，不改写系统来源。
 
 ## 其他工具
 
@@ -67,8 +73,8 @@ adb uninstall com.muyue.joyoseleash.qa
 
 后端检查和热部署会改变设备状态，不作为源码整理或普通构建步骤自动运行。正常安装使用 KernelSU 管理器。
 
-## 已有验证
+## 验证范围
 
-新包 `com.muyue.joyoseleash` 的 0.3.0 Beta 实机检查通过：40 次控件操作，缓存导航、分项编辑和空闲 12 秒的额外 Root 请求均为 0；帧率输入、无效值拦截、快捷值选中、温度档、未知字段保留、PID / MIGT 原生控件、关于信息及离线 MIT 全文均通过。控件点击处理最长约 6.32ms，只代表同步点击处理时间。模块安装实测自动安装新包，并比对迁移前后规则与偏好一致；原始迁移备份内容一致。
+既有验证记录包含字段解析、安装迁移、系统云控夹具及原生界面检查。既有界面回归包含 27 条实际新建流程，覆盖六种字段类型、改名与排序、分页、类型保留及保存后重开。
 
-界面预览由应用原生控件实机绘制，见 [预览](images/native-ui.png)。完整设备记录留在本机 `.local/evidence/`。构建成功不代表其他 ROM 的钩子或帧率行为已验证。
+既有检查中，本地编辑、缓存导航和空闲检查未新增 Root 请求；测试前后的草稿和规则来源已比对。以上为历史记录，不代表 0.3.3 的新增测试结果，也不代表其他 ROM 的钩子或帧率行为已验证。设备记录保存在 `.local/evidence/`，不随源码分发。

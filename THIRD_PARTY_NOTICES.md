@@ -1,5 +1,7 @@
 # 第三方依赖与资料
 
+简体中文 | [English](THIRD_PARTY_NOTICES.en.md)
+
 JoyoseLeash 自有项目源码使用 GPL-2.0-only，见 [LICENSE](LICENSE)。单独标注的 JoyCtl 衍生部分保留 MIT 许可，第三方项目与 SDK 维持各自许可。
 
 | 项目 | 用途 | 来源 |

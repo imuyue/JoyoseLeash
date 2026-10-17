@@ -1,6 +1,41 @@
 """Build the optional on-device instrumentation checks with the app's signing key."""
+import json
+import re
+import xml.etree.ElementTree as ET
 import zipfile
 from toolchain import ROOT, BUILD, Toolchain, Signing, run
+
+
+def resource_contract():
+    """QA-only expected resource values; never loaded by the product APK."""
+    def android_text(element):
+        text = ''.join(element.itertext())
+        if text.startswith('"') and text.endswith('"'):
+            text = text[1:-1]
+        else:
+            # Android collapses XML whitespace outside quoted resource strings.
+            text = re.sub(r'\s+', ' ', text).strip()
+        return re.sub(r'\\([ntr\\\'\"])', lambda match: {'n': '\n', 't': '\t', 'r': '\r'}.get(match[1], match[1]), text)
+
+    def catalog(folder):
+        result = {'string': {}, 'plurals': {}}
+        for path in sorted((ROOT / 'src/res' / folder).glob('*.xml')):
+            for element in ET.parse(path).getroot():
+                if element.tag not in result:
+                    continue
+                key = element.attrib['name']
+                if key in result[element.tag]:
+                    raise RuntimeError('Duplicate QA resource key: ' + folder + '/' + key)
+                result[element.tag][key] = (android_text(element) if element.tag == 'string' else
+                                            {item.attrib['quantity']: android_text(item) for item in element})
+        return result
+
+    default, chinese = catalog('values'), catalog('values-zh')
+    for kind in default:
+        if default[kind].keys() != chinese[kind].keys():
+            raise RuntimeError('English/Chinese resource key mismatch: ' + kind + ' ' +
+                               repr(sorted(default[kind].keys() ^ chinese[kind].keys())))
+    return {'schema': 1, 'default': default, 'zh': chinese}
 
 
 def main():
@@ -25,6 +60,7 @@ def main():
     run([tools.android_tool('aapt2'), 'link', '-I', tools.android_jar, '--manifest', manifest, '-o', unsigned])
     with zipfile.ZipFile(unsigned, 'a', zipfile.ZIP_DEFLATED) as archive:
         archive.write(dex / 'classes.dex', 'classes.dex')
+        archive.writestr('assets/ui-resource-contract.json', json.dumps(resource_contract(), ensure_ascii=False, sort_keys=True))
     run([tools.android_tool('zipalign'), '-f', '4', unsigned, output / 'aligned.apk'])
     signing.sign(tools, output / 'aligned.apk', output / 'checks.apk')
     print(output / 'checks.apk')

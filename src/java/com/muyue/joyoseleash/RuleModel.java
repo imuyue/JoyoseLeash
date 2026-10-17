@@ -20,11 +20,41 @@ final class RuleModel {
         else for(int i=0;i<((JSONArray)container).length();i++)result.add(i);
         return result;
     }
+    /** A one-key object in an array is a real named field, not an index alias. */
+    static final class Field {
+        final Object parent,key,value;final String name;final boolean namedItem;
+        Field(Object parent,Object key,Object value,boolean namedItem){this.parent=parent;this.key=key;this.value=value;this.name=key.toString();this.namedItem=namedItem;}
+    }
+    static Field field(Object parent,Object key)throws JSONException{
+        Object value=get(parent,key);
+        if(parent instanceof JSONArray&&value instanceof JSONObject&&((JSONObject)value).length()==1){String name=((JSONObject)value).keys().next();return new Field(value,name,((JSONObject)value).get(name),true);}
+        return new Field(parent,key,value,false);
+    }
+    static void validName(String name)throws Exception{if(name.trim().isEmpty())throw new Exception("名称不能为空或只有空白");}
+    static JSONObject named(String name,Object value)throws Exception{validName(name);return new JSONObject().put(name,value);}
+    static boolean rename(JSONObject parent,String key,String name)throws Exception{
+        if(name.equals(key))return false;validName(name);if(parent.has(name))throw new Exception("字段已存在");Object value=parent.get(key);parent.put(name,value);parent.remove(key);return true;
+    }
+    static int type(Object value){return value==JSONObject.NULL?5:value instanceof JSONObject?3:value instanceof JSONArray?4:value instanceof Boolean?2:value instanceof Number?1:0;}
+    static Object defaultValue(int type)throws JSONException{switch(type){case 0:return "";case 1:return 0L;case 2:return false;case 3:return new JSONObject();case 4:return new JSONArray();default:return JSONObject.NULL;}}
     static Number number(String text)throws Exception{
         BigDecimal value=new BigDecimal(text.trim());
         if(!Double.isFinite(value.doubleValue()))throw new Exception("数字超出范围");
         if(value.stripTrailingZeros().scale()<=0){try{return value.longValueExact();}catch(ArithmeticException e){throw new Exception("整数超出范围");}}
+        Protocol.strictJson(value.toString()); // Refuse precision loss on save/reload.
         return value;
+    }
+    /** Decode only encoded JSON containers; untouched strings retain their exact bytes. */
+    static final class Encoded {
+        final Object value;final int depth;
+        Encoded(Object value,int depth){this.value=value;this.depth=depth;}
+        String encode(){String text=value.toString();for(int i=1;i<depth;i++)text=JSONObject.quote(text);return text;}
+    }
+    static Encoded encoded(String text){
+        Object value=text;for(int depth=1;depth<=4&&value instanceof String;depth++)try{
+            value=Protocol.strictJson((String)value);
+            if(value instanceof JSONObject||value instanceof JSONArray)return new Encoded(value,depth);
+        }catch(Exception e){return null;}return null;
     }
     static JSONArray apps(JSONObject profile,boolean create)throws JSONException{
         JSONObject params=profile.getJSONObject("params"),game=params.optJSONObject("game_booster");

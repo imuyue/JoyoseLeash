@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 只翻译编辑器界面，JSON 原始键名、名称及数值不经过翻译。 -->
+<resources>
+    <string name="editor_fps_mode">帧率方式</string>
+    <string name="editor_fps_unify">统一设置</string>
+    <string name="editor_fps_separate">分别设置</string>
+    <string name="editor_more_rules">更多规则  ›</string>
+    <string name="editor_fps_global_description">使用全局帧率规则</string>
+    <string name="editor_fps_inherit">跟随全局</string>
+    <string name="editor_fps_fixed">固定帧率</string>
+    <string name="editor_fps_temperature">温度分档</string>
+    <string name="editor_fps_target">目标帧率</string>
+    <string name="editor_fps_decrease">减少帧率</string>
+    <string name="editor_fps_unlimited">不限帧</string>
+    <string name="editor_fps_increase">增加帧率</string>
+    <string name="editor_error_enter_fps">请输入帧率</string>
+    <string name="editor_temperature_threshold">温度 ≥ ℃</string>
+    <string name="editor_fps_label">帧率</string>
+    <string name="editor_temperature_add">+ 添加温度档</string>
+    <string name="editor_temperature_label">温度</string>
+    <string name="editor_temperature_accessibility">温度阈值，摄氏度</string>
+    <string name="editor_temperature_fps_accessibility">此温度对应帧率</string>
+    <string name="editor_temperature_remove">删除温度档</string>
+    <string name="editor_error_fps_range">帧率须为0至1000</string>
+    <string name="editor_error_add_temperature">请添加温度档</string>
+    <string name="editor_error_valid_number">请输入有效数字</string>
+    <string name="editor_error_check_input">请检查输入</string>
+    <string name="editor_json_search">搜索字段、类型或值</string>
+    <string name="editor_json_value_summary">%1$s · %2$s</string>
+    <string name="editor_json_no_matches">没有匹配的字段</string>
+    <string name="editor_previous_page">上一页</string>
+    <string name="editor_next_page">下一页</string>
+    <string name="editor_page_range">%1$d–%2$d / %3$d</string>
+    <string name="editor_page_position">%1$d / %2$d</string>
+    <string name="editor_page_position_next">%1$d / %2$d ›</string>
+    <string name="editor_json_add_field">+ 添加字段</string>
+    <string name="editor_json_view_raw">查看原始 JSON</string>
+    <string name="editor_json_edit_embedded">结构化编辑内嵌 JSON</string>
+    <string name="editor_json_edit_raw_string">编辑原始字符串</string>
+    <string name="editor_json_embedded_title">%1$s · 内嵌 JSON</string>
+    <string name="editor_json_field_type">字段类型</string>
+    <string name="editor_type_string">文本 string</string>
+    <string name="editor_type_number">数字 number</string>
+    <string name="editor_type_boolean">开关 boolean</string>
+    <string name="editor_type_object">对象 object</string>
+    <string name="editor_type_array">列表 array</string>
+    <string name="editor_type_null">空值 null</string>
+    <string name="editor_json_replace_type_warning">替换类型会清空当前值，是否继续？</string>
+    <string name="editor_json_replace_type">替换类型</string>
+    <string name="editor_json_add_item">添加列表项</string>
+    <string name="editor_json_named_item">具名字段（保存为对象）</string>
+    <string name="editor_json_unnamed_item">普通列表项（无名称）</string>
+    <string name="editor_json_original_name">字段原名</string>
+    <string name="editor_json_field_exists">字段已存在</string>
+    <string name="editor_action_rename">改名</string>
+    <string name="editor_action_name_item">设为具名字段</string>
+    <string name="editor_action_expand">展开对象</string>
+    <string name="editor_action_move_up">上移</string>
+    <string name="editor_action_move_down">下移</string>
+    <string name="editor_action_change_type">修改类型</string>
+    <string name="editor_action_delete">删除</string>
+    <string name="editor_json_named_conversion_warning">转换会把当前列表项包进 JSON 对象，改变结构；仅修改草稿，不会自动应用。</string>
+    <string name="editor_json_convert">转换</string>
+    <string name="editor_json_delete_warning">从本地草稿删除此字段？</string>
+    <string name="editor_json_raw_title">%1$s · JSON</string>
+    <string name="editor_rule_view_raw">查看原始字符串</string>
+    <string name="editor_rule_raw_title">原始字符串</string>
+    <string name="editor_rule_edit_raw">编辑原始字符串</string>
+    <string name="editor_rule_unparsed">未解析片段 / 警告</string>
+    <string name="editor_rule_previous_sections">上一页分组</string>
+    <string name="editor_rule_next_sections">下一页分组</string>
+    <string name="editor_rule_previous_fields">上一页字段</string>
+    <string name="editor_rule_next_fields">下一页字段</string>
+    <string name="editor_rule_collapse">收起</string>
+    <string name="editor_rule_expand">展开</string>
+    <string name="editor_rule_edit_raw_title">原始字符串（保留未知格式）</string>
+    <string name="editor_rule_empty_fragment">（空片段）</string>
+    <string name="editor_close">关闭</string>
+    <string name="editor_rule_fragment_label">%1$d · %2$s</string>
+    <string name="editor_rule_fragment_position">@%1$d…%2$d ›</string>
+    <string name="editor_rule_preserved_position">保留原样 · @%1$d…%2$d</string>
+    <string name="editor_rule_fragment_title">未解析片段 / 警告（字符位置）</string>
+    <string name="editor_rule_invalid_format">规则格式无效</string>
+    <plurals name="editor_rule_editable_fields">
+        <item quantity="other">%1$d 个可编辑字段</item>
+    </plurals>
+    <plurals name="editor_rule_characters">
+        <item quantity="other">%1$d 个字符 ›</item>
+    </plurals>
+    <plurals name="editor_rule_preserved_fragments">
+        <item quantity="other">%1$d 项 · 保留原样 ›</item>
+    </plurals>
+    <plurals name="editor_rule_section_items">
+        <item quantity="other">%1$s · %2$d 项 ›</item>
+    </plurals>
+</resources>
